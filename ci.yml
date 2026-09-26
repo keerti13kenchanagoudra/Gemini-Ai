@@ -1,0 +1,34 @@
+name: CI Demo
+
+on:
+  push:
+    branches: ["**"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Show workflow info
+        run: |
+          echo "CI/CD triggered by push"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+
+      - name: Compile Day 1 and Day 2 scripts
+        run: |
+          python -m py_compile day1/*.py
+          python -m py_compile day2/agentic_workshop/*.py
+          python -m py_compile day2/reusable_tool_agent/*.py
+          python -m py_compile day2/gemini_basics/*.py
+
+      - name: Run a sample script
+        run: python day1/05_planner_agent.py <<< "learn about agents"
